@@ -24,21 +24,40 @@ consumer_secret="WwCtEI2Y9tZOUgxNWL3mk4Yx8TZmdigrVFM5qGio9XaqdxEGHX"
 
 # After the step above, you will be redirected to your app's page.
 # Create an access token under the the "Your access token" section
-access_token="226707500-eidOyVv6klvDCscBQFlhqFZqmvRWoJYb9RwAMBoC"
+access_token="226707500-eidOyVv6klvDCscBQFlhqFZqmvRWoJYb9RwAMBoC"#trumpbot
 access_token_secret="vk3m8Rlz0CeLrdfPsKJpAjUgAUa4UkIxsy7EjuFI8wZeJ"
 
+ 
+ 
+    
+
+
+
 class MyStreamListener(tweepy.StreamListener):
+    def on_timeout(self):
+        print('Timeout...')
+        return True # To continue listening
+
+    
+    def on_error(self, status_code):
+        print('Got an error with status code: ' + str(status_code))
+        return True # To continue listening
 
     def on_status(self, status):
         if (status.user.screen_name=='realDonaldTrump'):
             
             
             if hasattr(status, 'retweeted_status'):
-                print('retweet')
+                try:
+                    twetch(status.retweeted_status.extended_tweet["full_text"])
+                except AttributeError:
+                    twetch(status.retweeted_status.text)
             else:
-                tweet = status.text
-                print(status.user.screen_name)
-                print(tweet)
+                try:
+                    twetch(status.extended_tweet["full_text"])
+                except AttributeError:
+                    twetch(status.text)
+        return True
        
 if __name__ == '__main__':
     a = MyStreamListener()
@@ -46,5 +65,8 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, a)
-    stream.filter(follow=['25073877'])#put twitter user id here
+    stream.filter(follow=['25073877'])#trump user id
+
+
+
 
