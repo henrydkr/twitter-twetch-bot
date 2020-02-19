@@ -49,12 +49,12 @@ class MyStreamListener(tweepy.StreamListener):
             
             if hasattr(status, 'retweeted_status'):
                 try:
-                    twetch(status.retweeted_status.extended_tweet["full_text"])
+                    twetch(status.text)
                 except AttributeError:
-                    twetch(status.retweeted_status.text)
+                    twetch(status.text)
             else:
                 try:
-                    twetch(status.extended_tweet["full_text"])
+                    twetch(status.text)#redundant, was trying to fuck w truncated but due to 256 on twetch its thiz
                 except AttributeError:
                     twetch(status.text)
         return True
@@ -66,6 +66,13 @@ if __name__ == '__main__':
 
     stream = Stream(auth, a)
     stream.filter(follow=['25073877'])#trump user id
+
+
+
+
+
+
+
 
 
 
